@@ -1,66 +1,63 @@
-# NCKeys 1.0.0
+# 🛡️ NCKeys – Anti-Keylogger Tool
 
-**NCKeys** is a lightweight offline security utility built with **.NET 9 / C#**, designed to protect your keyboard input, monitor suspicious processes, and optionally safeguard your clipboard. Ideal for enhancing privacy and defending against user-mode keyloggers and spyware.
+**Version:** `1.0.0`  
+**Platform:** Windows (.NET 9 / C# WinForms)  
+**Developer:** Noriel Calingasan  
+**Release Date:** September 1, 2025  
 
----
-
-## Features
-
-### 1. Keylogging Protection
-- **Low-Level Keyboard Hook:** Captures keystrokes in real time to detect suspicious activity.  
-- **Privacy Mode:** Option to ignore keystrokes completely to prevent accidental logging.  
-- **Encrypted Keystrokes:** All captured keys are encrypted using AES-256.  
-- **Hook Auto-Recovery:** Detects if the hook is removed and automatically re-applies it.  
-
-### 2. Process Monitoring & Anti-Spy
-- **Suspicious Process Detection:**  
-  - Flags processes with names like `keylogger`, `logger`, `hook`.  
-  - Checks hidden windows with high CPU/memory usage.  
-  - Detects processes with active **ESTABLISHED** TCP connections.  
-  - Validates digital signatures against a whitelist of trusted publishers.  
-  - Optional hash validation against known good process hashes.  
-- **Trusted Processes & Directories Whitelist:** Avoids false positives for system and common apps.  
-
-### 3. Clipboard Protection
-- **Real-Time Monitoring:** Clears clipboard if sensitive data is detected.  
-- **Toggleable:** Can be enabled or disabled via settings.  
-
-### 4. Performance & Reliability
-- **Real-Time Scanning:** Scans running processes every **2 seconds**.  
-- Maintains a list of already scanned PIDs for efficiency.  
-- Separate timers for keyboard hook recovery and real-time scanning.  
-- **Offline Operation:** Core protection works without network connectivity.  
-- **Safe Resource Use:** Optimized to avoid heavy CPU/memory usage.  
-
-### 5. Security & Privacy Features
-- **AES Encryption** for key data.  
-- **Trusted Publisher Verification** to allow only verified executables to bypass checks.  
-- **TCP Connection Filtering:** Focused on **ESTABLISHED** connections to reduce false positives.  
-
-### 6. Developer & User Integration
-- **Event Callbacks:**  
-  - `OnEncryptedKey`: Returns encrypted keystrokes for internal monitoring.  
-  - `OnSuspiciousProcessDetected`: Notifies about detected suspicious processes.  
-- **Extensible:** Add more trusted processes, directories, or known hashes.  
-
-### 7. Known Limitations / Future Improvements
-- **User-Mode Only:** Cannot detect kernel-level keyloggers.  
-- **Signed Malicious Apps:** Rare signed malware may bypass checks.  
-- **Static Heuristics:** CPU/memory thresholds can be evaded by advanced malware.  
-- **Caching:** Future versions may cache signature/hash checks for performance.  
+**Highlights in v1.0.0**
+- **Real-time keylogging protection** using a low-level keyboard hook  
+- AES-256 encryption of all captured keystrokes  
+- Auto-recovery of keyboard hook if removed  
+- Suspicious process detection (TCP connections, hidden windows, unsigned apps)  
+- Optional clipboard protection to block sensitive data  
+- Lightweight offline operation with minimal CPU/memory usage  
 
 ---
 
-## Supported Threats / Apps NCKeys Can Block or Detect
-- User-mode keyloggers (`keylogger.exe`, `logger.exe`, etc.)  
-- Hook-based monitoring tools in user-space  
-- Hidden processes consuming high CPU/memory  
-- Unsigned or untrusted apps establishing TCP connections  
-- Clipboard-stealing tools  
+## 📂 Repository  
+Explore source code, report issues, or contribute:  
+🔗 [https://github.com/norielcalingasan/NCKeys](https://github.com/norielcalingasan/NCKeys)
 
 ---
 
-## Comparison Table
+## 🚀 Features
+
+### Keylogging Protection
+- Low-Level Keyboard Hook for real-time keystroke monitoring  
+- Privacy Mode to ignore keystrokes completely  
+- Encrypted keystrokes using AES-256  
+- Hook auto-recovery in case of removal  
+
+### Process Monitoring & Anti-Spy
+- Suspicious process detection: keylogger, logger, hook keywords  
+- Hidden windows consuming high CPU/memory  
+- Detects processes with **ESTABLISHED** TCP connections  
+- Digital signature validation against trusted publishers  
+- Optional hash validation against known good process hashes  
+- Trusted processes & directories whitelist to avoid false positives  
+
+### Clipboard Protection
+- Optional real-time monitoring of clipboard  
+- Clears sensitive data automatically  
+- Toggleable via settings  
+
+### Performance & Reliability
+- Real-time scanning of running processes every **2 seconds**  
+- Tracks scanned PIDs for efficiency  
+- Separate timers for keyboard hook recovery and scanning  
+- Fully offline operation, no internet required  
+- Minimal CPU and memory usage  
+
+### Developer & User Integration
+- Event callbacks:  
+  - `OnEncryptedKey`: Returns encrypted keystrokes  
+  - `OnSuspiciousProcessDetected`: Notifies about suspicious processes  
+- Extensible: Add trusted processes, directories, or known hashes  
+
+---
+
+## 🆚 NCKeys vs Other Security Tools
 
 | Feature                          | NCKeys 1.0.0 | Traditional Anti-Keyloggers | Online AV/Antivirus |
 |----------------------------------|--------------|----------------------------|-------------------|
@@ -75,15 +72,17 @@
 
 ---
 
-## Installation
+## 🖥️ Installation
 
-1. Clone or download the repository.  
-2. Open `NCKeys.sln` in Visual Studio 2022 or later.  
-3. Build and run the project targeting **.NET 9**.  
+1. 📥 Download the repository or clone using Git  
+2. 📂 Open `NCKeys.sln` in Visual Studio 2022 or later  
+3. ▶️ Build and run the project targeting **.NET 9**  
+
+No installation required. Fully offline and portable.  
 
 ---
 
-## Usage
+## 🔧 Usage
 
 ```csharp
 // Start protection

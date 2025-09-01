@@ -1,6 +1,6 @@
 # NCKeys 1.0.0
 
-**NCKeys** is a lightweight offline security utility built with **.NET 9 / C#**, designed to protect your keyboard input, monitor suspicious processes, and optionally safeguard your clipboard. It is ideal for enhancing privacy and defending against user-mode keyloggers and spyware.
+**NCKeys** is a lightweight offline security utility built with **.NET 9 / C#**, designed to protect your keyboard input, monitor suspicious processes, and optionally safeguard your clipboard. Ideal for enhancing privacy and defending against user-mode keyloggers and spyware.
 
 ---
 

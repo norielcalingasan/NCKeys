@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\GitHub\\NCKeys\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
@@ -21,14 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|D:\\GitHub\\NCKeys\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}",
@@ -50,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Document",
@@ -78,7 +78,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "ProcessScanner.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\ProcessScanner.cs",
               "RelativeDocumentMoniker": "ProcessScanner.cs",
@@ -101,7 +101,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "SettingsForm.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\SettingsForm.cs",
               "RelativeDocumentMoniker": "SettingsForm.cs",
@@ -113,7 +113,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "NCKeys.csproj",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\NCKeys.csproj",
               "RelativeDocumentMoniker": "NCKeys.csproj",
@@ -125,7 +125,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "NCKeys",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\NCKeys.csproj",
               "RelativeDocumentMoniker": "NCKeys.csproj",
@@ -137,19 +137,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "main.Designer.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\main.Designer.cs",
               "RelativeDocumentMoniker": "main.Designer.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\main.Designer.cs",
               "RelativeToolTip": "main.Designer.cs",
-              "ViewState": "AgIAAJgAAAAAAAAAAAAAALUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAuwLkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T06:28:42.554Z"
+              "WhenOpened": "2025-09-01T06:28:42.554Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "KeyInterceptor.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\KeyInterceptor.cs",
               "RelativeDocumentMoniker": "KeyInterceptor.cs",
@@ -157,20 +158,20 @@
               "RelativeToolTip": "KeyInterceptor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAIUAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T06:28:23.15Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T06:28:23.15Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "main.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\main.cs",
               "RelativeDocumentMoniker": "main.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\main.cs",
               "RelativeToolTip": "main.cs",
-              "ViewState": "AgIAAAUBAAAAAAAAAAAAACIBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAOgAAAAAAAAAAAAqwPIAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T06:27:44.767Z"
+              "WhenOpened": "2025-09-01T06:27:44.767Z",
+              "EditorCaption": ""
             }
           ]
         }

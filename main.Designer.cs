@@ -17,9 +17,9 @@ namespace NCKeys
         private ProgressBar progressBar;
         private Label lblStatus;
         private Label lblKeysCaptured;
-        private System.Windows.Forms.Timer updateTimer;
-        // Add this inside the partial class Main
         private Label lblMemoryUsage;
+        private System.Windows.Forms.Timer updateTimer;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null)) components.Dispose();
@@ -30,26 +30,29 @@ namespace NCKeys
         {
             this.components = new System.ComponentModel.Container();
             this.ClientSize = new Size(500, 550);
-            this.Text = "NCKeys";
+            this.Text = "NCKeys – Anti-Keylogger Tool";
             this.BackColor = Color.FromArgb(30, 30, 47);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Icon = Properties.Resources.favicon;
 
+            // --------------------
             // Main layout
+            // --------------------
             TableLayoutPanel mainLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 1,
-                RowCount = 4,
+                RowCount = 3,
                 BackColor = Color.FromArgb(30, 30, 47)
             };
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30f));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 10f));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 10f));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 65f)); // Output box
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25f)); // Buttons grid
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 10f)); // Labels row
 
-            // Output box
+            // --------------------
+            // Output TextBox
+            // --------------------
             txtOutput = new TextBox
             {
                 Multiline = true,
@@ -63,7 +66,9 @@ namespace NCKeys
             };
             mainLayout.Controls.Add(txtOutput, 0, 0);
 
+            // --------------------
             // Buttons grid
+            // --------------------
             TableLayoutPanel buttonsGrid = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -77,8 +82,7 @@ namespace NCKeys
             buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
             buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
 
-            // Buttons
-            btnScan = CreateModernIconButton("Scan", IconChar.Search);
+            btnScan = CreateModernIconButton("Scan Keyloggers", IconChar.Search);
             btnSettings = CreateModernIconButton("Settings", IconChar.Cogs);
             btnStartHook = CreateModernIconButton("Start Protection", IconChar.Lock);
             btnStopHook = CreateModernIconButton("Stop Protection", IconChar.Unlock);
@@ -91,7 +95,9 @@ namespace NCKeys
 
             mainLayout.Controls.Add(buttonsGrid, 0, 1);
 
+            // --------------------
             // Progress bar
+            // --------------------
             progressBar = new ProgressBar
             {
                 Dock = DockStyle.Fill,
@@ -102,64 +108,83 @@ namespace NCKeys
             };
             mainLayout.Controls.Add(progressBar, 0, 2);
 
+            // --------------------
             // Labels row
+            // --------------------
             TableLayoutPanel labelsPanel = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                ColumnCount = 2,
+                ColumnCount = 3,
                 RowCount = 1,
                 BackColor = Color.FromArgb(30, 30, 47)
             };
-            labelsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-            labelsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            labelsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33f));
+            labelsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33f));
+            labelsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33f));
 
             lblStatus = new Label
             {
                 ForeColor = Color.White,
                 Text = "Status: Stopped",
-                AutoSize = true,
-                Anchor = AnchorStyles.Left
+                Anchor = AnchorStyles.Left,
+                AutoSize = true
             };
 
             lblKeysCaptured = new Label
             {
                 ForeColor = Color.White,
                 Text = "Keys Captured: 0",
-                AutoSize = true,
-                Anchor = AnchorStyles.Right
+                Anchor = AnchorStyles.None,
+                AutoSize = true
             };
 
             lblMemoryUsage = new Label
             {
                 ForeColor = Color.White,
                 Text = "Memory Used: 0 MB",
-                AutoSize = true,
-                Anchor = AnchorStyles.Right
+                Anchor = AnchorStyles.Right,
+                AutoSize = true
             };
-            // Add lblMemoryUsage to labelsPanel
-            labelsPanel.Controls.Add(lblMemoryUsage, 1, 1); // second row, right side
-            labelsPanel.RowCount = 2;
-            labelsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-            labelsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
 
             labelsPanel.Controls.Add(lblStatus, 0, 0);
             labelsPanel.Controls.Add(lblKeysCaptured, 1, 0);
+            labelsPanel.Controls.Add(lblMemoryUsage, 2, 0);
 
-            mainLayout.Controls.Add(labelsPanel, 0, 3);
+            mainLayout.Controls.Add(labelsPanel, 0, 2);
+
+            // --------------------
+            // Footer
+            // --------------------
+            Panel footerPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 25,
+                BackColor = Color.FromArgb(30, 30, 47)
+            };
+            Label lblFooter = new Label
+            {
+                Text = "© 2025 NCDevs. All rights reserved. Developed by Noriel Calingasan.",
+                ForeColor = Color.Gray,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 8, FontStyle.Italic)
+            };
+            footerPanel.Controls.Add(lblFooter);
+            this.Controls.Add(footerPanel);
+
             this.Controls.Add(mainLayout);
 
+            // --------------------
             // Timer: update every second
-            updateTimer = new System.Windows.Forms.Timer(this.components)
-            {
-                Interval = 1000 // 1000 ms = 1 second
-            };
-            updateTimer.Tick += UpdateTimer_Tick;
+            // --------------------
+            updateTimer = new System.Windows.Forms.Timer { Interval = 1000 };
+            updateTimer.Tick += (s, e) => UpdateTimer_Tick(s, e);
             updateTimer.Start();
         }
 
         private IconButton CreateModernIconButton(string text, IconChar icon)
         {
-            var btn = new IconButton()
+            var btn = new IconButton
             {
                 Text = text,
                 Dock = DockStyle.Fill,

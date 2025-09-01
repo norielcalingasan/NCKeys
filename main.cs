@@ -123,10 +123,9 @@ namespace NCKeys
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-
-
-            UpdateMemoryUsage(); // update RAM usage every tick
+            UpdateMemoryUsage();
         }
+
         private void UpdateMemoryUsage()
         {
             using var proc = Process.GetCurrentProcess();
@@ -135,22 +134,20 @@ namespace NCKeys
             if (baselineMemoryMB > 0)
             {
                 double delta = currentMemoryMB - baselineMemoryMB;
-                if (delta < 0) delta = 0;  // prevent negative
-                lblMemoryUsage.Text = $"Memory Used Since Protection: {delta:F2} MB";
+                if (delta < 0) delta = 0;
+                lblMemoryUsage.Text = $"Memory Δ: {delta:F2} MB";
             }
             else
             {
-                lblMemoryUsage.Text = $"Memory Used: {currentMemoryMB:F2} MB";
+                lblMemoryUsage.Text = $"Memory: {currentMemoryMB:F2} MB";
             }
         }
-
-
 
         private async void BtnScan_Click(object sender, EventArgs e)
         {
             btnScan.Enabled = false;
             txtOutput.Clear();
-            lblStatus.Text = "Scanning for suspicious processes...";
+            lblStatus.Text = "Scanning...";
             lblStatus.ForeColor = Color.Orange;
 
             progressBar.Style = ProgressBarStyle.Blocks;
@@ -180,6 +177,7 @@ namespace NCKeys
                 if (suspicious.Length == 0)
                 {
                     txtOutput.AppendText("✅ No suspicious processes detected.\r\n");
+                    lblStatus.Text = "Scan OK";
                     lblStatus.ForeColor = Color.LimeGreen;
                 }
                 else
@@ -187,16 +185,16 @@ namespace NCKeys
                     txtOutput.AppendText("⚠️ Suspicious processes detected:\r\n");
                     foreach (var s in suspicious)
                         txtOutput.AppendText(" - " + s + "\r\n");
+                    lblStatus.Text = "Scan Alert";
                     lblStatus.ForeColor = Color.Red;
                 }
 
-                lblStatus.Text = "Status: Scan Complete";
                 progressBar.Value = progressBar.Maximum;
             }
             catch (Exception ex)
             {
                 txtOutput.AppendText($"❌ Scan failed: {ex.Message}\r\n");
-                lblStatus.Text = "Status: Error during scan";
+                lblStatus.Text = "Scan Failed";
                 lblStatus.ForeColor = Color.Red;
             }
             finally
@@ -211,7 +209,7 @@ namespace NCKeys
             btnStopHook.Enabled = true;
             btnScan.Enabled = false;
 
-            lblStatus.Text = "Starting protection...";
+            lblStatus.Text = "Starting...";
             lblStatus.ForeColor = Color.Orange;
             progressBar.Style = ProgressBarStyle.Blocks;
             progressBar.Minimum = 0;
@@ -233,19 +231,18 @@ namespace NCKeys
                     KeyInterceptor.Start();
                 });
 
-                // Record baseline memory
                 using var proc = Process.GetCurrentProcess();
                 baselineMemoryMB = proc.PrivateMemorySize64 / (1024.0 * 1024.0);
 
-                lblMemoryUsage.Text = $"Memory Used Since Protection: 0 MB";
-                lblStatus.Text = "Status: Protection Active";
+                lblMemoryUsage.Text = $"Memory Δ : 0 MB";
+                lblStatus.Text = "Protection On";
                 lblStatus.ForeColor = Color.LimeGreen;
                 progressBar.Value = 100;
-                txtOutput.AppendText("✔ Protection has started and is now active.\r\n");
+                txtOutput.AppendText("✔ Protection active.\r\n");
             }
             catch (Exception ex)
             {
-                lblStatus.Text = "Status: Failed to start protection";
+                lblStatus.Text = "Protection Failed";
                 lblStatus.ForeColor = Color.Red;
                 txtOutput.AppendText($"✘ Failed to start protection: {ex.Message}\r\n");
                 btnStartHook.Enabled = true;
@@ -263,15 +260,12 @@ namespace NCKeys
             try
             {
                 KeyInterceptor.Stop();
-
-                // Reset memory tracking
                 baselineMemoryMB = 0;
 
-
-                lblStatus.Text = "Status: Protection Stopped";
+                lblStatus.Text = "Protection Off";
                 lblStatus.ForeColor = Color.Red;
                 progressBar.Value = 0;
-                txtOutput.AppendText("✘ Protection has been stopped.\r\n");
+                txtOutput.AppendText("✘ Protection stopped.\r\n");
             }
             catch (Exception ex)
             {
@@ -286,5 +280,3 @@ namespace NCKeys
         }
     }
 }
-
-

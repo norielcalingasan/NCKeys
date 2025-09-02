@@ -20,3 +20,4 @@ D:\GitHub\NCKeys\obj\Release\net9.0-windows\refint\NCKeys.dll
 D:\GitHub\NCKeys\obj\Release\net9.0-windows\NCKeys.pdb
 D:\GitHub\NCKeys\obj\Release\net9.0-windows\NCKeys.genruntimeconfig.cache
 D:\GitHub\NCKeys\obj\Release\net9.0-windows\ref\NCKeys.dll
+D:\GitHub\NCKeys\obj\Release\net9.0-windows\NCKeys.sourcelink.json

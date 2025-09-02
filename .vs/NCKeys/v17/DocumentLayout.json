@@ -3,32 +3,36 @@
   "WorkspaceRootPath": "D:\\GitHub\\NCKeys\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\keyinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:keyinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\settingsform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:settingsform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\nckeys.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:nckeys.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:processscanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:nckeys.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\nckeys.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:nckeys.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|D:\\GitHub\\NCKeys\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}",
@@ -37,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\properties\\resources.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
       "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:properties\\resources.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|d:\\github\\nckeys\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{258C3A51-3C87-4628-BA1C-97F75AB5D45C}|NCKeys.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -67,7 +67,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Resources.resx",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\Properties\\Resources.resx",
               "RelativeDocumentMoniker": "Properties\\Resources.resx",
@@ -78,19 +78,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "ProcessScanner.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\ProcessScanner.cs",
               "RelativeDocumentMoniker": "ProcessScanner.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\ProcessScanner.cs",
               "RelativeToolTip": "ProcessScanner.cs",
-              "ViewState": "AgIAAMsAAAAAAAAAAAAQwOkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAqwOkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-01T07:34:08.098Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Settings.settings",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\Properties\\Settings.settings",
               "RelativeDocumentMoniker": "Properties\\Settings.settings",
@@ -107,13 +107,13 @@
               "RelativeDocumentMoniker": "SettingsForm.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\SettingsForm.cs",
               "RelativeToolTip": "SettingsForm.cs",
-              "ViewState": "AgIAAKcAAAAAAAAAAAAAAMQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAKUAAAAAAAAAAAA2wMQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-01T07:09:54.244Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "NCKeys.csproj",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\NCKeys.csproj",
               "RelativeDocumentMoniker": "NCKeys.csproj",
@@ -125,53 +125,52 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "NCKeys",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\NCKeys.csproj",
               "RelativeDocumentMoniker": "NCKeys.csproj",
               "ToolTip": "D:\\GitHub\\NCKeys\\NCKeys.csproj",
               "RelativeToolTip": "NCKeys.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-09-01T06:57:47.128Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T06:57:47.128Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "main.Designer.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\main.Designer.cs",
               "RelativeDocumentMoniker": "main.Designer.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\main.Designer.cs",
               "RelativeToolTip": "main.Designer.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAuwLkAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwBcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-01T06:28:42.554Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "KeyInterceptor.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\KeyInterceptor.cs",
               "RelativeDocumentMoniker": "KeyInterceptor.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\KeyInterceptor.cs",
               "RelativeToolTip": "KeyInterceptor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIUAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFAAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T06:28:23.15Z"
+              "WhenOpened": "2025-09-01T06:28:23.15Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "main.cs",
               "DocumentMoniker": "D:\\GitHub\\NCKeys\\main.cs",
               "RelativeDocumentMoniker": "main.cs",
               "ToolTip": "D:\\GitHub\\NCKeys\\main.cs",
               "RelativeToolTip": "main.cs",
-              "ViewState": "AgIAAOgAAAAAAAAAAAAqwPIAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAPwAAAAAAAAAAAAUwBoBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-01T06:27:44.767Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T06:27:44.767Z"
             }
           ]
         }

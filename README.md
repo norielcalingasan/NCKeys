@@ -56,6 +56,47 @@ Explore source code, report issues, or contribute:
 - Extensible: Add trusted processes, directories, or known hashes  
 
 ---
+# ⚖️ Terms of Use
+
+**Important:** By using NCKeys, you agree to the following terms:
+
+---
+
+## 1. Personal & Authorized Use Only
+
+NCKeys is intended for personal security, privacy protection, and educational purposes. Do **not** install or run this software on devices you do not own or have explicit permission to monitor.
+
+---
+
+## 2. Consent Required
+
+You must obtain explicit consent from any other user if NCKeys is installed on a shared or third-party device.
+
+---
+
+## 3. Legal Compliance
+
+You are responsible for complying with all applicable laws regarding computer monitoring, keylogging, and data privacy in your country or region.
+
+---
+
+## 4. No Malicious Use
+
+Using NCKeys to steal passwords, personal data, or other sensitive information is **strictly prohibited** and may lead to criminal or civil liability.
+
+---
+
+## 5. Disclaimer of Liability
+
+NCKeys is provided “as-is” without warranties of any kind. The developer is **not responsible** for any misuse, damages, or legal consequences arising from your use of this software.
+
+---
+
+## 6. Intended Audience
+
+NCKeys is suitable for security enthusiasts, IT professionals, and developers learning about process monitoring and keylogging protection. It is **not a hacking tool**.
+
+---
 
 ## 🆚 NCKeys vs Other Security Tools
 

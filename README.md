@@ -56,45 +56,79 @@ Explore source code, report issues, or contribute:
 - Extensible: Add trusted processes, directories, or known hashes  
 
 ---
-# ⚖️ Terms of Use
 
-**Important:** By using NCKeys, you agree to the following terms:
+# ⚖️ Terms of Use – NCKeys
+
+**Important:** By using NCKeys, you acknowledge and agree to these terms. If you do not agree, do **not** use this software.
 
 ---
 
 ## 1. Personal & Authorized Use Only
 
-NCKeys is intended for personal security, privacy protection, and educational purposes. Do **not** install or run this software on devices you do not own or have explicit permission to monitor.
+NCKeys is intended solely for personal security, privacy protection, and educational purposes.  
+Do **not** install, run, or use this software on devices you do not own or do not have explicit written permission to monitor.
 
 ---
 
-## 2. Consent Required
+## 2. Consent Requirement
 
-You must obtain explicit consent from any other user if NCKeys is installed on a shared or third-party device.
+Before using NCKeys on any shared, public, or third-party device, you must obtain **explicit consent** from all users. Unauthorized use may violate local, national, or international laws.
 
 ---
 
 ## 3. Legal Compliance
 
-You are responsible for complying with all applicable laws regarding computer monitoring, keylogging, and data privacy in your country or region.
+You are solely responsible for complying with all applicable laws regarding computer monitoring, keylogging, data privacy, and cybersecurity in your jurisdiction.  
+This includes, but is not limited to:
+
+- Republic Act No. 10173 – Data Privacy Act of 2012 (Philippines)  
+- Republic Act No. 8792 – E-Commerce Act  
+- Republic Act No. 10175 – Cybercrime Prevention Act of 2012  
+- Relevant local and international computer misuse or privacy laws
 
 ---
 
-## 4. No Malicious Use
+## 4. Prohibited Use
 
-Using NCKeys to steal passwords, personal data, or other sensitive information is **strictly prohibited** and may lead to criminal or civil liability.
+NCKeys must **never** be used to:
+
+- Steal passwords, credentials, or any personally identifiable information  
+- Intercept private communications without consent  
+- Monitor or spy on third-party devices without authorization  
+
+Violations may lead to **criminal or civil liability** under applicable laws.
 
 ---
 
-## 5. Disclaimer of Liability
+## 5. No Warranty / Disclaimer of Liability
 
-NCKeys is provided “as-is” without warranties of any kind. The developer is **not responsible** for any misuse, damages, or legal consequences arising from your use of this software.
+NCKeys is provided “as-is,” without warranties of any kind, either express or implied.  
+The developer, Noriel Calingasan, and associated parties are **not responsible** for:
+
+- Any misuse of the software  
+- Loss or theft of data  
+- Legal consequences arising from your actions  
+- Any damages to hardware or software resulting from use  
 
 ---
 
 ## 6. Intended Audience
 
-NCKeys is suitable for security enthusiasts, IT professionals, and developers learning about process monitoring and keylogging protection. It is **not a hacking tool**.
+NCKeys is intended for:
+
+- Security enthusiasts  
+- IT professionals  
+- Developers learning about process monitoring and keylogging protection  
+
+It is explicitly **not a hacking tool**. Users must use it **ethically and legally**.
+
+---
+
+## 7. Acceptance
+
+By installing or running NCKeys, you acknowledge that you have **read, understood, and agreed** to these terms.  
+If you do not agree, immediately uninstall and discontinue use.
+
 
 ---
 

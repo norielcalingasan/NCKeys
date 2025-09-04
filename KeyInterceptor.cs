@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NCKeys
 {
@@ -58,8 +59,8 @@ namespace NCKeys
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
 
-        private static byte[] aesKey;
-        private static byte[] aesIV;
+        private static byte[]? aesKey;
+        private static byte[]? aesIV;
 
         private static readonly string[] TrustedProcesses = new[]
         {
@@ -68,21 +69,21 @@ namespace NCKeys
         public static bool PrivacyModeEnabled { get; set; } = false;
         public static bool ClipboardProtectionEnabled { get; set; } = false;
 
-        private static System.Windows.Forms.Timer _realtimeTimer;
+        private static System.Windows.Forms.Timer? _realtimeTimer;
         private static readonly HashSet<int> ScannedPIDs = new();
         private static readonly Dictionary<string, bool> TrustedPublisherCache = new();
-        private static readonly Dictionary<string, string> KnownHashes = new(); // Optional: store known good hashes
+        private static readonly Dictionary<string, string> KnownHashes = new();
 
-        private static System.Timers.Timer _hookRecoveryTimer;
+        private static System.Timers.Timer? _hookRecoveryTimer;
 
-        public static event Action<string> OnEncryptedKey;
-        public static event Action<string> OnSuspiciousProcessDetected;
+        public static event Action<string>? OnEncryptedKey;
+        public static event Action<string>? OnSuspiciousProcessDetected;
 
         static KeyInterceptor()
         {
             using var aes = Aes.Create();
-            aesKey = aes.Key;
-            aesIV = aes.IV;
+            aesKey = aes?.Key;
+            aesIV = aes?.IV;
 
             _hookRecoveryTimer = new System.Timers.Timer(5000);
             _hookRecoveryTimer.Elapsed += (s, e) =>
@@ -114,7 +115,7 @@ namespace NCKeys
 
         private static void StartRealtimeScan()
         {
-            _realtimeTimer = new System.Windows.Forms.Timer();
+            _realtimeTimer ??= new System.Windows.Forms.Timer();
             _realtimeTimer.Interval = 2000;
             _realtimeTimer.Tick += (s, e) =>
             {
@@ -150,11 +151,11 @@ namespace NCKeys
 
         private static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
-            using (Process curProcess = Process.GetCurrentProcess())
-            using (ProcessModule curModule = curProcess.MainModule)
-            {
-                return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
-            }
+            using Process curProcess = Process.GetCurrentProcess();
+            using ProcessModule? curModule = curProcess.MainModule;
+            return curModule != null
+                ? SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0)
+                : IntPtr.Zero;
         }
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
@@ -171,7 +172,8 @@ namespace NCKeys
                 if (!string.IsNullOrEmpty(keyStr))
                 {
                     string encrypted = EncryptKey(keyStr);
-                    OnEncryptedKey?.Invoke(encrypted);
+                    if (!string.IsNullOrEmpty(encrypted))
+                        OnEncryptedKey?.Invoke(encrypted);
                 }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
@@ -180,7 +182,6 @@ namespace NCKeys
         private static void MonitorClipboard()
         {
             if (!ClipboardProtectionEnabled) return;
-
             if (Clipboard.ContainsText())
                 Clipboard.Clear();
         }
@@ -204,26 +205,24 @@ namespace NCKeys
             };
 
             if (result.Length == 1 && char.IsLetter(result[0]))
-            {
                 result = (capsLock ^ shiftPressed) ? result.ToUpper() : result.ToLower();
-            }
 
             return result;
         }
 
         private static string EncryptKey(string key)
         {
+            if (aesKey == null || aesIV == null) return string.Empty;
+
             try
             {
-                using (Aes aes = Aes.Create())
-                {
-                    aes.Key = aesKey;
-                    aes.IV = aesIV;
-                    ICryptoTransform encryptor = aes.CreateEncryptor();
-                    byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-                    byte[] encrypted = encryptor.TransformFinalBlock(keyBytes, 0, keyBytes.Length);
-                    return Convert.ToBase64String(encrypted);
-                }
+                using Aes aes = Aes.Create()!;
+                aes.Key = aesKey;
+                aes.IV = aesIV;
+                ICryptoTransform encryptor = aes.CreateEncryptor();
+                byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+                byte[] encrypted = encryptor.TransformFinalBlock(keyBytes, 0, keyBytes.Length);
+                return Convert.ToBase64String(encrypted);
             }
             catch
             {
@@ -243,10 +242,12 @@ namespace NCKeys
                 if (ProcessHasTcpConnection(p.Id)) return true;
 
                 string hash = ComputeFileHash(path);
-                if (KnownHashes.TryGetValue(p.ProcessName.ToLowerInvariant(), out string knownHash))
+                if (KnownHashes.TryGetValue(p.ProcessName.ToLowerInvariant(), out string? knownHash))
                 {
-                    if (hash != knownHash) return true;
+                    if (hash is not null && hash != knownHash)
+                        return true;
                 }
+
 
                 return false;
             }

@@ -19,6 +19,8 @@ namespace NCKeys
         private Label lblKeysCaptured;
         private Label lblMemoryUsage;
         private System.Windows.Forms.Timer updateTimer;
+        private Button btnWhitelist;
+        private Button btnTerms;
 
         protected override void Dispose(bool disposing)
         {
@@ -29,7 +31,7 @@ namespace NCKeys
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.ClientSize = new Size(500, 550);
+            this.ClientSize = new Size(500, 600);
             this.Text = "NCKeys – Anti-Keylogger Tool";
             this.BackColor = Color.FromArgb(30, 30, 47);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -73,25 +75,30 @@ namespace NCKeys
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
-                RowCount = 2,
+                RowCount = 3,
                 Padding = new Padding(20),
                 BackColor = Color.FromArgb(30, 30, 47)
             };
             buttonsGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             buttonsGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-            buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-            buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+            buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 33f));
+            buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 33f));
+            buttonsGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 34f));
 
-            btnScan = CreateModernIconButton("Scan Keyloggers", IconChar.Search);
+            btnScan = CreateModernIconButton("Run Security Scan", IconChar.Search);
             btnSettings = CreateModernIconButton("Settings", IconChar.Cogs);
             btnStartHook = CreateModernIconButton("Start Protection", IconChar.Lock);
             btnStopHook = CreateModernIconButton("Stop Protection", IconChar.Unlock);
+            btnWhitelist = CreateModernIconButton("Whitelist", IconChar.ListCheck);
+            btnTerms = CreateModernIconButton("Terms of Use", IconChar.FileContract);
             btnStopHook.Enabled = false;
 
             buttonsGrid.Controls.Add(btnScan, 0, 0);
             buttonsGrid.Controls.Add(btnSettings, 0, 1);
             buttonsGrid.Controls.Add(btnStartHook, 1, 0);
             buttonsGrid.Controls.Add(btnStopHook, 1, 1);
+            buttonsGrid.Controls.Add(btnWhitelist, 0, 2);
+            buttonsGrid.Controls.Add(btnTerms, 1, 2);
 
             mainLayout.Controls.Add(buttonsGrid, 0, 1);
 
@@ -106,7 +113,6 @@ namespace NCKeys
                 ForeColor = Color.LimeGreen,
                 Value = 0
             };
-            mainLayout.Controls.Add(progressBar, 0, 2);
 
             // --------------------
             // Labels row
@@ -125,7 +131,7 @@ namespace NCKeys
             lblStatus = new Label
             {
                 ForeColor = Color.White,
-                Text = "Status: Stopped",
+                Text = "Status: Idle",
                 Anchor = AnchorStyles.Left,
                 AutoSize = true
             };
@@ -141,7 +147,7 @@ namespace NCKeys
             lblMemoryUsage = new Label
             {
                 ForeColor = Color.White,
-                Text = "Memory Used: 0 MB",
+                Text = "Memory: 0 MB",
                 Anchor = AnchorStyles.Right,
                 AutoSize = true
             };
@@ -150,6 +156,7 @@ namespace NCKeys
             labelsPanel.Controls.Add(lblKeysCaptured, 1, 0);
             labelsPanel.Controls.Add(lblMemoryUsage, 2, 0);
 
+            mainLayout.Controls.Add(progressBar, 0, 2);
             mainLayout.Controls.Add(labelsPanel, 0, 2);
 
             // --------------------
@@ -173,13 +180,6 @@ namespace NCKeys
             this.Controls.Add(footerPanel);
 
             this.Controls.Add(mainLayout);
-
-            // --------------------
-            // Timer: update every second
-            // --------------------
-            updateTimer = new System.Windows.Forms.Timer { Interval = 1000 };
-            updateTimer.Tick += (s, e) => UpdateTimer_Tick(s, e);
-            updateTimer.Start();
         }
 
         private IconButton CreateModernIconButton(string text, IconChar icon)
@@ -194,8 +194,9 @@ namespace NCKeys
                 Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold),
                 IconChar = icon,
                 IconColor = Color.White,
-                IconSize = 24,
-                TextImageRelation = TextImageRelation.ImageBeforeText
+                IconSize = 20,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                Height = 26
             };
             btn.FlatAppearance.BorderSize = 0;
             btn.MouseEnter += (s, e) => btn.BackColor = Color.FromArgb(70, 70, 100);

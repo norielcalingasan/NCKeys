@@ -37,52 +37,127 @@ namespace NCKeys
             public int owningPid;
         }
 
-        // Known safe processes (by name)
-        private static readonly HashSet<string> SafeProcesses = new(StringComparer.OrdinalIgnoreCase)
+        // -----------------------
+        //  Whitelist System
+        // -----------------------
+
+        private static readonly string WhitelistFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "whitelist.txt");
+
+        public static readonly HashSet<string> DefaultProcesses = new(StringComparer.OrdinalIgnoreCase)
         {
-            // Browsers / Common apps
-            "chrome", "msedge", "explorer", "steam", "discord",
-            "nvcontainer", "SearchApp", "LockApp", "RuntimeBroker",
-            "ShellExperienceHost", "ctfmon", "audiodg", "services",
-            "ms-teams",
+            // Core system
+            "System", "Idle", "smss", "csrss", "wininit", "winlogon",
+            "services", "lsass", "svchost", "fontdrvhost",
 
-            // Windows core processes
-            "svchost", "wininit", "csrss", "winlogon", "lsass",
-            "taskhostw", "sihost", "conhost", "dllhost",
+            // Session/host
+            "sihost", "dwm", "ctfmon", "taskhostw", "explorer",
 
-            // Intel / NVIDIA / Drivers
-            "igfxEM", "RtkAudUService64", "NVIDIA Overlay",
+            // Console / dll host
+            "conhost", "dllhost", "runtimebroker",
 
-            // Misc system
-            "SecurityHealthSystray", "StartMenuExperienceHost",
-            "TextInputHost", "CompPkgSrv", "smss",
-            "ApplicationFrameHost", "SystemSettings",
+            // Shell & UI
+            "ShellExperienceHost", "StartMenuExperienceHost",
+            "SearchApp", "TextInputHost", "LockApp",
 
-            // Development (Visual Studio related)
-            "devenv", "PerfWatson2", "MSBuild", "VBCSCompiler",
-            "ServiceHub.IdentityHost", "ServiceHub.RoslynCodeAnalysisService",
-            "ServiceHub.Host.dotnet.x64", "ServiceHub.DataWarehouseHost",
-            "ServiceHub.ThreadedWaitDialog", "ServiceHub.IntellicodeModelService",
-            "ServiceHub.TestWindowStoreHost", "ServiceHub.IndexingService",
-            "DesignToolsServer",
+            // Audio & input
+            "audiodg", "RtkAudUService64",
+
+            // Graphics / GPU
+            "nvcontainer", "NVIDIA Web Helper Service", "igfxEM",
+
+            // Settings & app framework
+            "SystemSettings", "ApplicationFrameHost", "CompPkgSrv",
+
+            // Security & health
+            "SecurityHealthSystray", "SecurityHealthService",
 
             // Self
             "NCKeys"
         };
 
-        // Known safe directories
-        private static readonly string[] SafePaths =
+        public static readonly HashSet<string> DefaultPaths = new(StringComparer.OrdinalIgnoreCase)
         {
-            @"C:\Windows\System32",
+            Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64"),
             @"C:\Program Files",
-            @"C:\Program Files (x86)",
-            Environment.GetFolderPath(Environment.SpecialFolder.Windows)
+            @"C:\Program Files (x86)"
         };
 
-        /// <summary>
-        /// Returns suspicious processes as a grouped summary:
-        /// e.g. "Discord (3 instance(s))"
-        /// </summary>
+
+        private static HashSet<string> SafeProcesses = new(StringComparer.OrdinalIgnoreCase);
+        private static HashSet<string> SafePaths = new(StringComparer.OrdinalIgnoreCase);
+
+        static ProcessScanner()
+        {
+            LoadOrCreateWhitelist();
+        }
+
+        private static void LoadOrCreateWhitelist()
+        {
+            if (!File.Exists(WhitelistFile))
+            {
+                SaveWhitelist(DefaultProcesses, DefaultPaths, new HashSet<string>(), new HashSet<string>());
+            }
+
+            var processes = new HashSet<string>(DefaultProcesses, StringComparer.OrdinalIgnoreCase);
+            var paths = new HashSet<string>(DefaultPaths, StringComparer.OrdinalIgnoreCase);
+            var userProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var userPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var line in File.ReadAllLines(WhitelistFile))
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#")) continue;
+
+                if (line.StartsWith("process:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string proc = line.Substring(8).Trim();
+                    if (!string.IsNullOrEmpty(proc))
+                    {
+                        if (!DefaultProcesses.Contains(proc)) userProcesses.Add(proc);
+                        processes.Add(proc);
+                    }
+                }
+                else if (line.StartsWith("path:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string path = line.Substring(5).Trim();
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        if (!DefaultPaths.Contains(path)) userPaths.Add(path);
+                        paths.Add(path);
+                    }
+                }
+            }
+
+            SafeProcesses = processes;
+            SafePaths = paths;
+
+            // rewrite to restore defaults if missing
+            SaveWhitelist(DefaultProcesses, DefaultPaths, userProcesses, userPaths);
+        }
+
+        private static void SaveWhitelist(HashSet<string> defaultsProc, HashSet<string> defaultsPath,
+                                          HashSet<string> userProc, HashSet<string> userPath)
+        {
+            using var writer = new StreamWriter(WhitelistFile);
+
+            writer.WriteLine("# Default Safe Processes (auto-restored if deleted)");
+            foreach (var p in defaultsProc.OrderBy(x => x)) writer.WriteLine("process: " + p);
+
+            writer.WriteLine();
+            writer.WriteLine("# Default Safe Paths (auto-restored if deleted)");
+            foreach (var p in defaultsPath.OrderBy(x => x)) writer.WriteLine("path: " + p);
+
+            writer.WriteLine();
+            writer.WriteLine("# User Added Entries");
+            foreach (var p in userProc.OrderBy(x => x)) writer.WriteLine("process: " + p);
+            foreach (var p in userPath.OrderBy(x => x)) writer.WriteLine("path: " + p);
+        }
+
+        // -----------------------
+        //  Main Logic
+        // -----------------------
+
         public static string[] GetSuspiciousProcessesSummary()
         {
             var results = new List<string>();
@@ -99,9 +174,6 @@ namespace NCKeys
             return results.ToArray();
         }
 
-        /// <summary>
-        /// Returns raw suspicious processes with PID (un-grouped).
-        /// </summary>
         public static string[] GetSuspiciousProcessesRaw()
         {
             var suspicious = new List<(string ProcessName, int Pid)>();
@@ -110,13 +182,16 @@ namespace NCKeys
             {
                 try
                 {
-                    string name = p.ProcessName;
-                    string exePath = SafeGetPath(p);
+                    string? name = p.ProcessName;
+                    string? exePath = SafeGetPath(p);
 
-                    if (IsSafeProcess(name, exePath))
+                    if (string.IsNullOrEmpty(name))
                         continue;
 
-                    if (IsSuspiciousProcess(p, exePath))
+                    if (IsSafeProcess(name, exePath ?? string.Empty))
+                        continue;
+
+                    if (IsSuspiciousProcess(p, exePath ?? string.Empty))
                         suspicious.Add((name, p.Id));
                 }
                 catch
@@ -128,9 +203,6 @@ namespace NCKeys
             return suspicious.Select(s => $"{s.ProcessName} (PID {s.Pid})").ToArray();
         }
 
-        // -----------------------
-        //  Helpers
-        // -----------------------
 
         private static bool IsSafeProcess(string name, string exePath)
         {
@@ -170,17 +242,23 @@ namespace NCKeys
             return false;
         }
 
-        private static string SafeGetPath(Process p)
+        private static string? SafeGetPath(Process p)
         {
-            try { return p.MainModule.FileName; }
-            catch { return string.Empty; }
+            try
+            {
+                return p.MainModule?.FileName;
+            }
+            catch
+            {
+                return null;
+            }
         }
+
 
         private static bool IsTrustedPublisher(string filePath)
         {
             try
             {
-                // Use the new loader instead of the obsolete constructor
                 var cert = X509CertificateLoader.LoadCertificateFromFile(filePath);
                 string subject = cert.Subject?.ToLowerInvariant() ?? "";
 

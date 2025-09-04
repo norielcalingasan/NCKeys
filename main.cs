@@ -9,21 +9,35 @@ namespace NCKeys
 {
     public partial class Main : Form
     {
-        private NotifyIcon trayIcon;
-        private ContextMenuStrip trayMenu;
+        private NotifyIcon? trayIcon;
+        private ContextMenuStrip? trayMenu;
         private double baselineMemoryMB = 0;
 
         public Main()
         {
             InitializeComponent();
+
+            // Tray + wiring + timer
             InitializeTray();
 
-            btnScan.Click += BtnScan_Click;
-            btnStartHook.Click += BtnStartHook_Click;
+            btnScan.Click += async (s, e) => await RunScanAsync();
+            btnStartHook.Click += async (s, e) => await StartProtectionAsync();
             btnStopHook.Click += BtnStopHook_Click;
             btnSettings.Click += BtnSettings_Click;
+            btnWhitelist.Click += BtnWhitelist_Click;
+            btnTerms.Click += BtnTerms_Click;
+
+            updateTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 1000
+            };
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Start();
         }
 
+        // --------------------
+        // Tray & Helpers
+        // --------------------
         private void InitializeTray()
         {
             trayMenu = new ContextMenuStrip();
@@ -35,11 +49,11 @@ namespace NCKeys
                 ForeColor = Color.DarkGreen
             };
 
-            toggleProtection.Click += (s, e) =>
+            toggleProtection.Click += async (s, e) =>
             {
                 if (btnStartHook.Enabled)
                 {
-                    BtnStartHook_Click(null, EventArgs.Empty);
+                    await StartProtectionAsync();
                     toggleProtection.Text = "Disable Protection";
                     toggleProtection.Image = IconToBitmap(IconChar.Shield, 16, Color.Red);
                     toggleProtection.ForeColor = Color.Red;
@@ -56,8 +70,7 @@ namespace NCKeys
             trayMenu.Items.Add(toggleProtection);
             trayMenu.Items.Add("Exit", null, (s, e) =>
             {
-                trayIcon.Visible = false;
-                trayIcon.Dispose();
+                trayIcon?.Dispose();
                 Application.Exit();
             });
 
@@ -88,8 +101,7 @@ namespace NCKeys
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            if (WindowState == FormWindowState.Minimized)
-                HideToTray();
+            if (WindowState == FormWindowState.Minimized) HideToTray();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -101,7 +113,7 @@ namespace NCKeys
             }
             else
             {
-                trayIcon.Dispose();
+                trayIcon?.Dispose();
                 base.OnFormClosing(e);
             }
         }
@@ -110,7 +122,7 @@ namespace NCKeys
         {
             this.Hide();
             this.ShowInTaskbar = false;
-            trayIcon.Visible = true;
+            if (trayIcon != null) trayIcon.Visible = true;
         }
 
         private void RestoreFromTray()
@@ -121,142 +133,154 @@ namespace NCKeys
             this.BringToFront();
         }
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
-        {
-            UpdateMemoryUsage();
-        }
+        // --------------------
+        // Timer
+        // --------------------
+        private void UpdateTimer_Tick(object? sender, EventArgs e) => UpdateMemoryUsage();
 
         private void UpdateMemoryUsage()
         {
-            using var proc = Process.GetCurrentProcess();
-            double currentMemoryMB = proc.PrivateMemorySize64 / (1024.0 * 1024.0);
+            try
+            {
+                using var proc = Process.GetCurrentProcess();
+                double currentMemoryMB = proc.PrivateMemorySize64 / (1024.0 * 1024.0);
 
-            if (baselineMemoryMB > 0)
-            {
-                double delta = currentMemoryMB - baselineMemoryMB;
-                if (delta < 0) delta = 0;
-                lblMemoryUsage.Text = $"Memory Δ: {delta:F2} MB";
+                if (baselineMemoryMB > 0)
+                {
+                    double delta = currentMemoryMB - baselineMemoryMB;
+                    lblMemoryUsage.Text = $"Memory Δ: {Math.Max(0, delta):F2} MB";
+                }
+                else lblMemoryUsage.Text = $"Memory: {currentMemoryMB:F2} MB";
             }
-            else
-            {
-                lblMemoryUsage.Text = $"Memory: {currentMemoryMB:F2} MB";
-            }
+            catch { }
         }
 
-        private async void BtnScan_Click(object sender, EventArgs e)
+        // --------------------
+        // Buttons Async Helpers
+        // --------------------
+        private void SetButtonsEnabled(bool scan, bool start, bool stop, bool settings = true, bool whitelist = true, bool terms = true)
         {
-            btnScan.Enabled = false;
+            btnScan.Enabled = scan;
+            btnStartHook.Enabled = start;
+            btnStopHook.Enabled = stop;
+            btnSettings.Enabled = settings;
+            btnWhitelist.Enabled = whitelist;
+            btnTerms.Enabled = terms;
+        }
+
+        private async Task RunScanAsync()
+        {
+            // Disable buttons during scan
+            SetButtonsEnabled(false, false, false);
             txtOutput.Clear();
             lblStatus.Text = "Scanning...";
             lblStatus.ForeColor = Color.Orange;
 
-            progressBar.Style = ProgressBarStyle.Blocks;
-            progressBar.Minimum = 0;
-            progressBar.Maximum = 100;
-            progressBar.Value = 0;
-
-            var progress = new Progress<int>(val =>
+            IProgress<string> outputReporter = new Progress<string>(line =>
             {
-                if (val <= progressBar.Maximum)
-                    progressBar.Value = val;
+                txtOutput.AppendText($"[{DateTime.Now:HH:mm:ss}] {line}\r\n");
+                txtOutput.ScrollToCaret();
             });
 
-            try
-            {
-                string[] suspicious = await Task.Run(() =>
-                {
-                    var processes = ProcessScanner.GetSuspiciousProcessesSummary();
-                    for (int i = 0; i <= 100; i += 5)
-                    {
-                        (progress as IProgress<int>)?.Report(i);
-                        System.Threading.Thread.Sleep(30);
-                    }
-                    return processes;
-                });
-
-                if (suspicious.Length == 0)
-                {
-                    txtOutput.AppendText("✅ No suspicious processes detected.\r\n");
-                    lblStatus.Text = "Scan OK";
-                    lblStatus.ForeColor = Color.LimeGreen;
-                }
-                else
-                {
-                    txtOutput.AppendText("⚠️ Suspicious processes detected:\r\n");
-                    foreach (var s in suspicious)
-                        txtOutput.AppendText(" - " + s + "\r\n");
-                    lblStatus.Text = "Scan Alert";
-                    lblStatus.ForeColor = Color.Red;
-                }
-
-                progressBar.Value = progressBar.Maximum;
-            }
-            catch (Exception ex)
-            {
-                txtOutput.AppendText($"❌ Scan failed: {ex.Message}\r\n");
-                lblStatus.Text = "Scan Failed";
-                lblStatus.ForeColor = Color.Red;
-            }
-            finally
-            {
-                btnScan.Enabled = true;
-            }
-        }
-
-        private async void BtnStartHook_Click(object sender, EventArgs e)
-        {
-            btnStartHook.Enabled = false;
-            btnStopHook.Enabled = true;
-            btnScan.Enabled = false;
-
-            lblStatus.Text = "Starting...";
-            lblStatus.ForeColor = Color.Orange;
-            progressBar.Style = ProgressBarStyle.Blocks;
-            progressBar.Minimum = 0;
-            progressBar.Maximum = 100;
-            progressBar.Value = 0;
-            txtOutput.AppendText("Initializing protection...\r\n");
-
-            var progress = new Progress<int>(val => progressBar.Value = val);
+            IProgress<int> progressReporter = new Progress<int>(val => progressBar.Value = val);
 
             try
             {
                 await Task.Run(() =>
                 {
+                    outputReporter.Report("🔍 Starting scan...");
+                    var processes = ProcessScanner.GetSuspiciousProcessesSummary();
+
+                    if (processes.Length == 0)
+                    {
+                        outputReporter.Report("✅ No suspicious processes detected.");
+                        progressReporter.Report(100);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < processes.Length; i++)
+                        {
+                            outputReporter.Report($"⚠️ {processes[i]}");
+                            progressReporter.Report((int)((i + 1) / (double)processes.Length * 100));
+                            System.Threading.Thread.Sleep(50); // simulate scanning
+                        }
+                    }
+
+                    outputReporter.Report("🔍 Scan complete.");
+                    progressReporter.Report(100);
+                });
+
+                // Update status label after scan
+                bool hasAlert = txtOutput.Text.Contains("⚠️");
+                lblStatus.Text = hasAlert ? "Scan Alert" : "Scan OK";
+                lblStatus.ForeColor = hasAlert ? Color.Red : Color.LimeGreen;
+            }
+            catch (Exception ex)
+            {
+                outputReporter.Report($"❌ Scan failed: {ex.Message}");
+                lblStatus.Text = "Scan Failed";
+                lblStatus.ForeColor = Color.Red;
+            }
+            finally
+            {
+                // Enable Scan button and Start Protection button
+                SetButtonsEnabled(true, true, btnStopHook.Enabled);
+            }
+        }
+
+        private async Task StartProtectionAsync()
+        {
+            SetButtonsEnabled(false, false, false);
+            lblStatus.Text = "Starting protection...";
+            lblStatus.ForeColor = Color.Orange;
+            progressBar.Value = 0;
+
+            IProgress<string> outputReporter = new Progress<string>(line =>
+            {
+                txtOutput.AppendText($"[{DateTime.Now:HH:mm:ss}] {line}\r\n");
+                txtOutput.ScrollToCaret();
+            });
+
+            IProgress<int> progressReporter = new Progress<int>(val => progressBar.Value = val);
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    outputReporter.Report("🛡 Initializing protection...");
                     for (int i = 0; i <= 100; i += 5)
                     {
-                        (progress as IProgress<int>)?.Report(i);
+                        progressReporter.Report(i);
+                        if (i % 25 == 0) outputReporter.Report($"🔹 Progress: {i}%");
                         System.Threading.Thread.Sleep(20);
                     }
+
                     KeyInterceptor.Start();
+                    outputReporter.Report("✔ Protection active.");
                 });
 
                 using var proc = Process.GetCurrentProcess();
                 baselineMemoryMB = proc.PrivateMemorySize64 / (1024.0 * 1024.0);
 
-                lblMemoryUsage.Text = $"Memory Δ : 0 MB";
+                lblMemoryUsage.Text = "Memory Δ: 0 MB";
                 lblStatus.Text = "Protection On";
                 lblStatus.ForeColor = Color.LimeGreen;
                 progressBar.Value = 100;
-                txtOutput.AppendText("✔ Protection active.\r\n");
             }
             catch (Exception ex)
             {
                 lblStatus.Text = "Protection Failed";
                 lblStatus.ForeColor = Color.Red;
                 txtOutput.AppendText($"✘ Failed to start protection: {ex.Message}\r\n");
-                btnStartHook.Enabled = true;
-                btnStopHook.Enabled = false;
-                btnScan.Enabled = true;
+            }
+            finally
+            {
+                SetButtonsEnabled(true, false, true);
             }
         }
 
-        private void BtnStopHook_Click(object sender, EventArgs e)
+        private void BtnStopHook_Click(object? sender, EventArgs e)
         {
-            btnStopHook.Enabled = false;
-            btnStartHook.Enabled = true;
-            btnScan.Enabled = true;
-
             try
             {
                 KeyInterceptor.Stop();
@@ -264,19 +288,38 @@ namespace NCKeys
 
                 lblStatus.Text = "Protection Off";
                 lblStatus.ForeColor = Color.Red;
+                lblMemoryUsage.Text = "Memory: 0 MB";
                 progressBar.Value = 0;
-                txtOutput.AppendText("✘ Protection stopped.\r\n");
+
+                txtOutput.AppendText($"[{DateTime.Now:HH:mm:ss}] ✘ Protection stopped.\r\n");
+
+                // Enable Scan and Start Protection buttons, disable Stop Protection
+                SetButtonsEnabled(true, true, false);
             }
             catch (Exception ex)
             {
-                txtOutput.AppendText($"✘ Failed to stop protection: {ex.Message}\r\n");
+                txtOutput.AppendText($"[{DateTime.Now:HH:mm:ss}] ✘ Failed to stop protection: {ex.Message}\r\n");
             }
         }
 
-        private void BtnSettings_Click(object sender, EventArgs e)
+
+        private void BtnSettings_Click(object? sender, EventArgs e)
         {
-            using (var settingsForm = new SettingsForm())
-                settingsForm.ShowDialog(this);
+            using var settingsForm = new SettingsForm();
+            settingsForm.ShowDialog(this);
+        }
+
+        private void BtnWhitelist_Click(object? sender, EventArgs e)
+        {
+            using var form = new WhitelistForm();
+            form.ShowDialog(this);
+        }
+
+        private void BtnTerms_Click(object? sender, EventArgs e)
+        {
+            var termsForm = new TermsForm();
+            termsForm.ShowCloseOnly();
+            termsForm.ShowDialog(this);
         }
     }
 }

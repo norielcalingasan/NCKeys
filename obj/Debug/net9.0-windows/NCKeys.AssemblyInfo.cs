@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NCKeys")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1bffdbc8c0861fe047772e7a6c048bd6b24432ef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ff4be28815dbfd27b16909d0d5fefeb22c1a27e")]
 [assembly: System.Reflection.AssemblyProductAttribute("NCKeys")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NCKeys")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0")]

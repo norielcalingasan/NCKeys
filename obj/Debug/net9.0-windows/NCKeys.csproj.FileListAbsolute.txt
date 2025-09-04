@@ -44,3 +44,4 @@ D:\GitHub\NCKeys\obj\Debug\net9.0-windows\refint\NCKeys.dll
 D:\GitHub\NCKeys\obj\Debug\net9.0-windows\NCKeys.pdb
 D:\GitHub\NCKeys\obj\Debug\net9.0-windows\NCKeys.genruntimeconfig.cache
 D:\GitHub\NCKeys\obj\Debug\net9.0-windows\ref\NCKeys.dll
+D:\GitHub\NCKeys\obj\Debug\net9.0-windows\NCKeys.WhitelistForm.resources

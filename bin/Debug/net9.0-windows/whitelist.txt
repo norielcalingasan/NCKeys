@@ -1,0 +1,44 @@
+# Default Safe Processes (auto-restored if deleted)
+process: ApplicationFrameHost
+process: audiodg
+process: CompPkgSrv
+process: conhost
+process: csrss
+process: ctfmon
+process: dllhost
+process: dwm
+process: explorer
+process: fontdrvhost
+process: Idle
+process: igfxEM
+process: LockApp
+process: lsass
+process: NCKeys
+process: nvcontainer
+process: NVIDIA Web Helper Service
+process: RtkAudUService64
+process: runtimebroker
+process: SearchApp
+process: SecurityHealthService
+process: SecurityHealthSystray
+process: services
+process: ShellExperienceHost
+process: sihost
+process: smss
+process: StartMenuExperienceHost
+process: svchost
+process: System
+process: SystemSettings
+process: taskhostw
+process: TextInputHost
+process: wininit
+process: winlogon
+
+# Default Safe Paths (auto-restored if deleted)
+path: C:\Program Files
+path: C:\Program Files (x86)
+path: C:\WINDOWS
+path: C:\WINDOWS\System32
+path: C:\WINDOWS\SysWOW64
+
+# User Added Entries

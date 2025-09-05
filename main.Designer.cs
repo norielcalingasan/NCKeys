@@ -91,7 +91,23 @@ namespace NCKeys
             btnStopHook = CreateModernIconButton("Stop Protection", IconChar.Unlock);
             btnWhitelist = CreateModernIconButton("Whitelist", IconChar.ListCheck);
             btnTerms = CreateModernIconButton("Terms of Use", IconChar.FileContract);
+
             btnStopHook.Enabled = false;
+            ToolTip toolTip = new ToolTip
+            {
+                AutoPopDelay = 5000,
+                InitialDelay = 500,
+                ReshowDelay = 200,
+                ShowAlways = true
+            };
+
+            toolTip.SetToolTip(btnScan, "Run a full system scan for suspicious processes");
+            toolTip.SetToolTip(btnSettings, "Change app preferences and security options");
+            toolTip.SetToolTip(btnStartHook, "Start background keylogger protection");
+            toolTip.SetToolTip(btnStopHook, "Stop protection safely");
+            toolTip.SetToolTip(btnWhitelist, "Manage trusted applications");
+            toolTip.SetToolTip(btnTerms, "View the terms of use");
+
 
             buttonsGrid.Controls.Add(btnScan, 0, 0);
             buttonsGrid.Controls.Add(btnSettings, 0, 1);

@@ -20,7 +20,6 @@ namespace NCKeys
             // Form properties
             this.Text = "";
             this.Size = new Size(650, 550);
-
             this.BackColor = Color.FromArgb(30, 30, 47);
             this.FormBorderStyle = FormBorderStyle.None;
             this.ShowInTaskbar = false;
@@ -48,25 +47,10 @@ namespace NCKeys
             };
             headerPanel.Controls.Add(lblTitle);
 
-            // ✅ Allow dragging from header panel
-            headerPanel.MouseDown += (s, e) =>
-            {
-                if (e.Button == MouseButtons.Left)
-                {
-                    NativeMethods.ReleaseCapture();
-                    NativeMethods.SendMessage(this.Handle, NativeMethods.WM_NCLBUTTONDOWN, NativeMethods.HTCAPTION, 0);
-                }
-            };
-
-            // Optional: allow dragging anywhere on the form
-            this.MouseDown += (s, e) =>
-            {
-                if (e.Button == MouseButtons.Left)
-                {
-                    NativeMethods.ReleaseCapture();
-                    NativeMethods.SendMessage(this.Handle, NativeMethods.WM_NCLBUTTONDOWN, NativeMethods.HTCAPTION, 0);
-                }
-            };
+            // ✅ Allow dragging from header and label
+            headerPanel.MouseDown += Header_MouseDown;
+            lblTitle.MouseDown += Header_MouseDown;
+            this.MouseDown += Header_MouseDown;
 
             // --------------------
             // Button Container Panel (bottom area)
@@ -74,13 +58,12 @@ namespace NCKeys
             Panel bottomContainer = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 120, // matches button height comfortably
+                Height = 120,
                 Padding = new Padding(0, 15, 0, 20),
                 BackColor = Color.FromArgb(30, 30, 47)
             };
             this.Controls.Add(bottomContainer);
 
-            // Separator line
             Panel separator = new Panel
             {
                 Dock = DockStyle.Top,
@@ -89,9 +72,6 @@ namespace NCKeys
             };
             bottomContainer.Controls.Add(separator);
 
-            // --------------------
-            // Button Panel (centered)
-            // --------------------
             buttonPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -109,9 +89,7 @@ namespace NCKeys
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI Semibold", 11, FontStyle.Bold),
-                Margin = new Padding(20, 15, 20, 10),
-                TextAlign = ContentAlignment.MiddleCenter,
-                UseCompatibleTextRendering = true
+                Margin = new Padding(20, 15, 20, 10)
             };
             btnDecline.FlatAppearance.BorderSize = 0;
             btnDecline.Click += (s, e) =>
@@ -131,9 +109,7 @@ namespace NCKeys
                 Font = new Font("Segoe UI Semibold", 11, FontStyle.Bold),
                 Margin = new Padding(20, 15, 20, 10),
                 Enabled = false,
-                Visible = false,
-                TextAlign = ContentAlignment.MiddleCenter,
-                UseCompatibleTextRendering = true
+                Visible = false
             };
             btnAccept.FlatAppearance.BorderSize = 0;
             btnAccept.Click += (s, e) =>
@@ -142,7 +118,6 @@ namespace NCKeys
                 this.Close();
             };
 
-            // ✅ New Close button (for when opened inside app)
             btnClose = new Button
             {
                 Text = "Close",
@@ -162,7 +137,6 @@ namespace NCKeys
             buttonPanel.Controls.Add(btnDecline);
             buttonPanel.Controls.Add(btnAccept);
 
-            // Center buttons when layout changes
             buttonPanel.Layout += (s, e) =>
             {
                 int totalWidth = 0;
@@ -178,11 +152,11 @@ namespace NCKeys
             contentPanel = new Panel
             {
                 Dock = DockStyle.Fill,
-                Padding = new Padding(20, 20, 20, 0), // bottom padding removed so text doesn’t clash with buttons
+                Padding = new Padding(20, 20, 20, 0),
                 AutoScroll = true
             };
             this.Controls.Add(contentPanel);
-            this.Controls.SetChildIndex(contentPanel, 1); // keep it above bottomContainer
+            this.Controls.SetChildIndex(contentPanel, 1);
 
             rtbTerms = new RichTextBox
             {
@@ -202,11 +176,27 @@ namespace NCKeys
             this.Region = System.Drawing.Region.FromHrgn(
                 NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20));
 
+            // ✅ Keep rounded corners when resizing
+            this.Resize += (s, e) =>
+            {
+                this.Region = System.Drawing.Region.FromHrgn(
+                    NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20));
+            };
+
             // ✅ Check on load if scrollbar exists
             this.Load += (s, e) => CheckIfScrollBarNeeded();
         }
 
-        // ✅ Helper method to switch to Close-only mode
+        // ✅ Shared handler for moving the form
+        private void Header_MouseDown(object? sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                NativeMethods.ReleaseCapture();
+                NativeMethods.SendMessage(this.Handle, NativeMethods.WM_NCLBUTTONDOWN, NativeMethods.HTCAPTION, 0);
+            }
+        }
+
         public void ShowCloseOnly()
         {
             btnDecline.Visible = false;
@@ -324,3 +314,6 @@ All disputes or claims related to the use of NCKeys are subject to the exclusive
         }
     }
 }
+
+
+

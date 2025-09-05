@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows.Forms;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NCKeys
 {
@@ -66,8 +67,8 @@ namespace NCKeys
         {
             "explorer", "chrome", "msedge", "discord", "steam", "NCKeys"
         };
-        public static bool PrivacyModeEnabled { get; set; } = false;
-        public static bool ClipboardProtectionEnabled { get; set; } = false;
+
+        private static ManagementEventWatcher? processStartWatcher;
 
         private static System.Windows.Forms.Timer? _realtimeTimer;
         private static readonly HashSet<int> ScannedPIDs = new();
@@ -75,6 +76,10 @@ namespace NCKeys
         private static readonly Dictionary<string, string> KnownHashes = new();
 
         private static System.Timers.Timer? _hookRecoveryTimer;
+        private static string? _lastClipboardText;
+
+        private static Queue<Process> _processQueue = new();
+        private const int _scanBatchSize = 10;
 
         public static event Action<string>? OnEncryptedKey;
         public static event Action<string>? OnSuspiciousProcessDetected;
@@ -94,12 +99,106 @@ namespace NCKeys
             _hookRecoveryTimer.Start();
         }
 
+        public static bool IsRunning() => _hookID != IntPtr.Zero;
+
         public static void Start()
         {
             if (_hookID == IntPtr.Zero)
                 _hookID = SetHook(_proc);
 
             StartRealtimeScan();
+            StartProcessWatcher();
+        }
+
+        private static void StartProcessWatcher()
+        {
+            if (!IsAdmin())
+            {
+                StartPollingProcesses();
+                return;
+            }
+
+            try
+            {
+                string query = "SELECT * FROM Win32_ProcessStartTrace";
+                processStartWatcher = new ManagementEventWatcher(query);
+                processStartWatcher.EventArrived += (s, e) =>
+                {
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            int pid = Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value);
+                            Process? p = Process.GetProcessById(pid);
+                            if (!TrustedProcesses.Contains(p.ProcessName) && IsSuspiciousProcess(p))
+                            {
+                                OnSuspiciousProcessDetected?.Invoke($"{p.ProcessName} (PID {p.Id})");
+                            }
+                        }
+                        catch { }
+                    });
+                };
+                processStartWatcher.Start();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                StartPollingProcesses();
+            }
+        }
+
+        private static void StartPollingProcesses()
+        {
+            _realtimeTimer ??= new System.Windows.Forms.Timer();
+            _realtimeTimer.Interval = 5000;
+            _realtimeTimer.Tick += (s, e) => IncrementalProcessScan();
+            _realtimeTimer.Start();
+        }
+
+        private static void IncrementalProcessScan()
+        {
+            Task.Run(() =>
+            {
+                if (_processQueue.Count == 0)
+                {
+                    foreach (var p in Process.GetProcesses())
+                    {
+                        if (!ScannedPIDs.Contains(p.Id))
+                            _processQueue.Enqueue(p);
+                    }
+                }
+
+                int count = 0;
+                while (_processQueue.Count > 0 && count < _scanBatchSize)
+                {
+                    var p = _processQueue.Dequeue();
+                    try
+                    {
+                        if (ScannedPIDs.Contains(p.Id)) continue;
+                        ScannedPIDs.Add(p.Id);
+
+                        if (!TrustedProcesses.Contains(p.ProcessName) && IsSuspiciousProcess(p))
+                            OnSuspiciousProcessDetected?.Invoke($"{p.ProcessName} (PID {p.Id})");
+                    }
+                    catch { }
+                    count++;
+                }
+
+                MonitorClipboard();
+            });
+        }
+
+        private static void StopProcessWatcher()
+        {
+            processStartWatcher?.Stop();
+            processStartWatcher?.Dispose();
+            processStartWatcher = null;
+        }
+
+        private static bool IsAdmin()
+        {
+            using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            var principal = new System.Security.Principal.WindowsPrincipal(identity);
+            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
         }
 
         public static void Stop()
@@ -111,33 +210,14 @@ namespace NCKeys
             }
 
             StopRealtimeScan();
+            StopProcessWatcher();
         }
 
         private static void StartRealtimeScan()
         {
             _realtimeTimer ??= new System.Windows.Forms.Timer();
-            _realtimeTimer.Interval = 2000;
-            _realtimeTimer.Tick += (s, e) =>
-            {
-                Task.Run(() =>
-                {
-                    var processes = Process.GetProcesses();
-                    foreach (var p in processes)
-                    {
-                        try
-                        {
-                            if (ScannedPIDs.Contains(p.Id)) continue;
-                            ScannedPIDs.Add(p.Id);
-
-                            if (!TrustedProcesses.Contains(p.ProcessName) && IsSuspiciousProcess(p))
-                                OnSuspiciousProcessDetected?.Invoke($"{p.ProcessName} (PID {p.Id})");
-                        }
-                        catch { }
-                    }
-                });
-
-                MonitorClipboard();
-            };
+            _realtimeTimer.Interval = 5000;
+            _realtimeTimer.Tick += (s, e) => IncrementalProcessScan();
             _realtimeTimer.Start();
         }
 
@@ -147,6 +227,24 @@ namespace NCKeys
             _realtimeTimer?.Dispose();
             _realtimeTimer = null;
             ScannedPIDs.Clear();
+            _processQueue.Clear();
+        }
+
+        private static void MonitorClipboard()
+        {
+            if (!Properties.Settings.Default.ClipboardProtection) return;
+            if (!Clipboard.ContainsText()) return;
+
+            try
+            {
+                string text = Clipboard.GetText();
+                if (_lastClipboardText != text)
+                {
+                    Clipboard.Clear();
+                    _lastClipboardText = text;
+                }
+            }
+            catch { }
         }
 
         private static IntPtr SetHook(LowLevelKeyboardProc proc)
@@ -164,7 +262,7 @@ namespace NCKeys
         {
             if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
             {
-                if (PrivacyModeEnabled)
+                if (Properties.Settings.Default.PrivacyMode)
                     return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
                 int vkCode = Marshal.ReadInt32(lParam);
@@ -177,13 +275,6 @@ namespace NCKeys
                 }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
-        }
-
-        private static void MonitorClipboard()
-        {
-            if (!ClipboardProtectionEnabled) return;
-            if (Clipboard.ContainsText())
-                Clipboard.Clear();
         }
 
         private static string MapKey(int vkCode)
@@ -238,7 +329,6 @@ namespace NCKeys
                 if (string.IsNullOrEmpty(path)) return false;
 
                 if (!IsTrustedPublisher(path)) return true;
-
                 if (ProcessHasTcpConnection(p.Id)) return true;
 
                 string hash = ComputeFileHash(path);
@@ -247,7 +337,6 @@ namespace NCKeys
                     if (hash is not null && hash != knownHash)
                         return true;
                 }
-
 
                 return false;
             }

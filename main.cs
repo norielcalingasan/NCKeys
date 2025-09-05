@@ -35,6 +35,8 @@ namespace NCKeys
             updateTimer.Start();
         }
 
+
+
         // --------------------
         // Tray & Helpers
         // --------------------
@@ -186,7 +188,7 @@ namespace NCKeys
 
             try
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     outputReporter.Report("🔍 Starting scan...");
                     var processes = ProcessScanner.GetSuspiciousProcessesSummary();
@@ -202,13 +204,14 @@ namespace NCKeys
                         {
                             outputReporter.Report($"⚠️ {processes[i]}");
                             progressReporter.Report((int)((i + 1) / (double)processes.Length * 100));
-                            System.Threading.Thread.Sleep(50); // simulate scanning
+                            await Task.Delay(20); // non-blocking async delay
                         }
                     }
 
                     outputReporter.Report("🔍 Scan complete.");
                     progressReporter.Report(100);
                 });
+
 
                 // Update status label after scan
                 bool hasAlert = txtOutput.Text.Contains("⚠️");

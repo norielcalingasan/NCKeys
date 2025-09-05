@@ -179,17 +179,38 @@ namespace NCKeys
             try
             {
                 string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(runKey, true))
+
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(runKey, writable: true))
                 {
+                    if (key is null)
+                    {
+                        MessageBox.Show(
+                            "Failed to open registry key for startup settings.",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+                        return;
+                    }
+
                     if (enable)
+                    {
                         key.SetValue("NCKeys", Application.ExecutablePath);
+                    }
                     else
-                        key.DeleteValue("NCKeys", false);
+                    {
+                        key.DeleteValue("NCKeys", throwOnMissingValue: false);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to update startup setting: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Failed to update startup setting: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
     }

@@ -68,11 +68,10 @@ namespace NCKeys
                 if (!Directory.Exists(logDir))
                     Directory.CreateDirectory(logDir);
 
-                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string logFile = Path.Combine(logDir, $"Accepted_{timestamp}.stmp");
+                // 📌 Group logs by day (e.g., Accepted_20250905.log)
+                string logFile = Path.Combine(logDir, $"Accepted_{DateTime.Now:yyyyMMdd}.log");
 
                 string logContent = $@"
-NCKeys Terms Acceptance Log
 ===============================
 Timestamp : {DateTime.Now:yyyy-MM-dd HH:mm:ss}
 Machine   : {Environment.MachineName}
@@ -82,10 +81,10 @@ OS        : {Environment.OSVersion}
 64-bit OS : {Environment.Is64BitOperatingSystem}
 Processor : {Environment.ProcessorCount} logical cores
 CLR       : {Environment.Version}
-===============================
 ";
 
-                File.WriteAllText(logFile, logContent);
+                // 📌 Append instead of overwrite
+                File.AppendAllText(logFile, logContent);
             }
             catch (Exception ex)
             {
@@ -95,5 +94,6 @@ CLR       : {Environment.Version}
                     MessageBoxIcon.Warning);
             }
         }
+
     }
 }

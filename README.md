@@ -1,17 +1,10 @@
 # 🛡️ NCKeys – Anti-Keylogger Tool
 
-**Version:** `1.0.0`  
+**Version:** `1.1.0`  
 **Platform:** Windows (.NET 9 / C# WinForms)  
 **Developer:** Noriel Calingasan  
 **Release Date:** September 1, 2025  
-
-**Highlights in v1.0.0**
-- **Real-time keylogging protection** using a low-level keyboard hook  
-- AES-256 encryption of all captured keystrokes  
-- Auto-recovery of keyboard hook if removed  
-- Suspicious process detection (TCP connections, hidden windows, unsigned apps)  
-- Optional clipboard protection to block sensitive data  
-- Lightweight offline operation with minimal CPU/memory usage  
+**Update Date:** September 5, 2025  
 
 ---
 
@@ -43,8 +36,9 @@ Explore source code, report issues, or contribute:
 - Toggleable via settings  
 
 ### Performance & Reliability
-- Real-time scanning of running processes every **2 seconds**  
+- Real-time scanning of running processes every **2–5 seconds**  
 - Tracks scanned PIDs for efficiency  
+- Incremental process scanning in batches  
 - Separate timers for keyboard hook recovery and scanning  
 - Fully offline operation, no internet required  
 - Minimal CPU and memory usage  
@@ -84,7 +78,7 @@ This includes, but is not limited to:
 - Republic Act No. 10173 – Data Privacy Act of 2012 (Philippines)  
 - Republic Act No. 8792 – E-Commerce Act  
 - Republic Act No. 10175 – Cybercrime Prevention Act of 2012  
-- Relevant local and international computer misuse or privacy laws
+- Relevant local and international computer misuse or privacy laws  
 
 ---
 
@@ -129,12 +123,11 @@ It is explicitly **not a hacking tool**. Users must use it **ethically and legal
 By installing or running NCKeys, you acknowledge that you have **read, understood, and agreed** to these terms.  
 If you do not agree, immediately uninstall and discontinue use.
 
-
 ---
 
 ## 🆚 NCKeys vs Other Security Tools
 
-| Feature                          | NCKeys 1.0.0 | Traditional Anti-Keyloggers | Online AV/Antivirus |
+| Feature                          | NCKeys 1.1.0 | Traditional Anti-Keyloggers | Online AV/Antivirus |
 |----------------------------------|--------------|----------------------------|-------------------|
 | Real-Time Keylogging Protection   | ✅            | ✅                          | ✅                 |
 | AES Encryption of Keystrokes      | ✅            | ❌                          | ❌                 |
@@ -144,6 +137,8 @@ If you do not agree, immediately uninstall and discontinue use.
 | User-Mode Only                    | ✅            | ✅                          | ❌ (kernel-level) |
 | Hook Auto-Recovery                | ✅            | ❌                          | ❌                 |
 | Trusted Publisher Verification    | ✅            | ❌                          | ✅                 |
+| Memory Usage Monitor              | ✅            | ❌                          | ❌                 |
+| Terms of Use Enforcement          | ✅            | ❌                          | ❌                 |
 
 ---
 
@@ -176,8 +171,8 @@ KeyInterceptor.OnSuspiciousProcessDetected += (info) =>
 };
 
 // Enable Privacy Mode or Clipboard Protection
-KeyInterceptor.PrivacyModeEnabled = true;
-KeyInterceptor.ClipboardProtectionEnabled = true;
+Properties.Settings.Default.PrivacyMode = true;
+Properties.Settings.Default.ClipboardProtection = true;
 
 // Stop protection
 KeyInterceptor.Stop();
